@@ -58,8 +58,8 @@ p, h1{
 
     <main>
     <div>
-    <h1>Maintenance in progress<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></h1>
-    <p class="text-white bg-dark">Sorry for the inconvenience but we're performing some maintenance right now. Please check back later.</p>
+    <h1>En mantenimiento<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></h1>
+    <p class="text-white bg-dark">La pagina esta bajo mantenimiento, para cualquier duda contactad a Eneko</p>
     </div>
 
 </main>
