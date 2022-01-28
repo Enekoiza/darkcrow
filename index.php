@@ -5,12 +5,16 @@
   $verification = true;
   $conn = DBconn();
 
-  if(isset($_COOKIE['login']) and isset($_COOKIE['password']))
+  if(isset($_COOKIE['login']) and isset($_COOKIE['admin']))
+  {
+    $_SESSION['login'] = $_COOKIE['login'];
+    header("Location: dashboardAdmin.php");
+  }
+  else if(isset($_COOKIE['login']) and !isset($_COOKIE['admin']))
   {
     $_SESSION['login'] = $_COOKIE['login'];
     header("Location: dashboard.php");
   }
-
 
   if(!empty($_POST))
   {
@@ -18,7 +22,7 @@
     $email = $_POST['username'];
     $password = $_POST['password'];
 
-    $findOcurrence = "SELECT email, password, isVerified FROM user_details WHERE email = :email AND password = :password";
+    $findOcurrence = "SELECT email, password, isVerified, isAdmin FROM user_details WHERE email = :email AND password = :password";
     $sth = $conn->prepare($findOcurrence);
     $sth->execute([':email' => $email, ':password' => strval(hashpssw($password))]);
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -35,12 +39,26 @@
     }
     if ($noOcurrence == false and $verification == true)
     {
-      if(isset($_POST['remember-me']))
+      $_SESSION['login'] = $email;
+      if($result[0]['isAdmin'] == 0)
       {
-        setcookie('login', $email, time() + (30 * 24 * 60 * 60));
-        setcookie('password', hashPssw($password), time() + (30 * 24 * 60 * 60));
+        if(isset($_POST['remember-me']))
+        {
+          setcookie('login', $email, time() + (30 * 24 * 60 * 60));
+        }
+        $_SESSION['dashboard'] = 'dashboard.php';
+        header("Location: dashboard.php");
       }
-      header("Location: dashboard.php");
+      else
+      {
+        if(isset($_POST['remember-me']))
+        {
+          setcookie('login', $email, time() + (30 * 24 * 60 * 60));
+          setcookie('admin', '1', time() + (30 * 24 * 60 * 60));
+        }
+        $_SESSION['dashboard'] = 'dashboardAdmin.php';
+        header("Location: dashboardAdmin.php");
+      }
     }
 
   }
@@ -51,8 +69,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="shortcut icon" type="image/x-icon" href="/images/favicon-16x16.png" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/png" href="/images/favicon-16x16.png" />
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <title>DC Pagina Principal</title>
 <style type="text/css">
 * {
@@ -96,20 +118,22 @@ background-size: cover;
 
     <label id="login-existence" class="hidden-label" style=<?php if($noOcurrence == true) {echo "display:inline;";}else{echo "display:none;";}?>>No existe ninguna cuenta con ese email</label>
     <label id="login-existence" class="hidden-label" style=<?php if($noOcurrence == false && $verification == false) {echo "display:inline;";}else{echo "display:none;";}?>>Su cuenta esta por verificar</label>
-    <input type="text" name="username" id="username" name="username" class="form-control mb-2" placeholder="Nombre de usuario" required autofocus>
+    <input type="text" name="username" id="username" name="username" class="form-control mb-2" placeholder="Nombre de usuario" autofocus>
     <input type="password" id="password" name="password" placeholder="Contraseña" class="form-control">
     <div class="checkbox">
       <input type="checkbox" value="remember-me" id="remember-me" name="remember-me"> Remember me
     </div>
     <button type="submit" class="btn btn-lg btn-primary mt-3">Entrar</button></br>
-    <button class="mb-2 btn btn-lg btn-info mt-3 text-white" id="register-button">Registrarme</button>
+    <button type="button" class="mb-2 btn btn-lg btn-info mt-3 text-white" id="register-button">Registrarme</button>
   </form>
 </div>
 
 <script>
-      document.POSTElementById("register-button").onclick = function () {
-        location.href = "registration.php";
-    };
+  $(document).ready(function(){
+    $("button").click(function(){
+      location.href = "registration.php";
+    });
+  });
 </script>
 
 
