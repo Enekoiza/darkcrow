@@ -1,15 +1,18 @@
 <?php
     session_start();
 
-    if((!isset($_SESSION['dashboard'])) or (!isset($_COOKIE['login'])))
+    if(!isset($_COOKIE['login']) and (!isset($_SESSION['dashboard'])))
     {
         header("Location: index.php");
     }
-    else if(($_SESSION['dashboard'] == 'dashboard.php') or (isset($_COOKIE['login']) and !isset($_COOKIE['admin'])))
+    if(isset($_COOKIE['login']) and !isset($_COOKIE['admin']))
     {
       header("Location: dashboard.php");
     }
-
+    if(isset($_COOKIE['admin']) and isset($_COOKIE['login']) and !isset($_SESSION['dashboard']))
+    {
+      $_SESSION['dashboard'] = 'dashboardAdmin.php';
+    }
 
 ?>
 
