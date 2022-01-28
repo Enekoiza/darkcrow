@@ -44,7 +44,7 @@
         <li class="nav-item">
           <a class="nav-link" href="formularioDefensivo.php">Formulario Defensivo</a>
         </li>
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Dropdown
           </a>
@@ -54,10 +54,10 @@
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </li>
+        </li> -->
       </ul>
       <form class="d-flex" method="post" id="form1" action="cookieDelete.php">
-        <button type="submit" form="form1" >Run my PHP code</button>
+        <button type="submit" form="form1" >Desloguear</button>
       </form>
     </div>
   </div>

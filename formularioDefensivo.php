@@ -9,6 +9,10 @@
     {
       header("Location: dashboard.php");
     }
+    if(isset($_COOKIE['admin']) and isset($_COOKIE['login']) and !isset($_SESSION['dashboard']))
+    {
+      $_SESSION['dashboard'] = 'dashboardAdmin.php';
+    }
     
 
     if(!empty($_POST))
@@ -81,7 +85,7 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Reportes</a>
         </li>
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Dropdown
           </a>
@@ -91,7 +95,7 @@
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link disabled">Disabled</a>
         </li>
